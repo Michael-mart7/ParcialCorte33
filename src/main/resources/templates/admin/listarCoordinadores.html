@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Coordinadores</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 30px 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        h1 i {
+            color: #667eea;
+            font-size: 2.2rem;
+        }
+        
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+        
+        .table-container {
+            background: white;
+            padding: 0;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+        
+        .table-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 25px 30px;
+            color: white;
+        }
+        
+        .table-header h2 {
+            margin: 0;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .table-wrapper {
+            overflow-x: auto;
+            padding: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+        }
+        
+        th {
+            padding: 18px 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        td {
+            padding: 18px 15px;
+            border-bottom: 1px solid #e9ecef;
+            color: #495057;
+            font-size: 0.95rem;
+        }
+        
+        tbody tr {
+            transition: all 0.3s ease;
+        }
+        
+        tbody tr:hover {
+            background: #f8f9fa;
+            transform: scale(1.01);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            color: #dee2e6;
+            margin-bottom: 20px;
+        }
+        
+        .empty-state p {
+            font-size: 1.2rem;
+            margin: 0;
+        }
+        
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+            
+            .header {
+                padding: 20px;
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            .table-wrapper {
+                padding: 15px;
+            }
+            
+            table {
+                font-size: 0.85rem;
+            }
+            
+            th, td {
+                padding: 12px 10px;
+            }
+            
+            th {
+                font-size: 0.8rem;
+            }
+        }
+        
+        /* Animación de entrada */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .table-container {
+            animation: fadeInUp 0.6s ease;
+        }
+        
+        tbody tr {
+            animation: fadeInUp 0.4s ease backwards;
+        }
+        
+        tbody tr:nth-child(1) { animation-delay: 0.1s; }
+        tbody tr:nth-child(2) { animation-delay: 0.15s; }
+        tbody tr:nth-child(3) { animation-delay: 0.2s; }
+        tbody tr:nth-child(4) { animation-delay: 0.25s; }
+        tbody tr:nth-child(5) { animation-delay: 0.3s; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>
+            <i class="fas fa-user-tie"></i>
+            Coordinadores Registrados
+        </h1>
+        <a class="back-btn" href="/admin/dashboard">
+            <i class="fas fa-arrow-left"></i>
+            Volver al Dashboard
+        </a>
+    </div>
+
+    <div class="table-container">
+        <div class="table-header">
+            <h2>
+                <i class="fas fa-list"></i>
+                <span>Lista Completa</span>
+            </h2>
+        </div>
+        
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-hashtag"></i> ID</th>
+                        <th><i class="fas fa-user"></i> Usuario</th>
+                        <th><i class="fas fa-id-card"></i> Nombre</th>
+                        <th><i class="fas fa-signature"></i> Apellido</th>
+                        <th><i class="fas fa-envelope"></i> Correo</th>
+                        <th><i class="fas fa-phone"></i> Teléfono</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="c : ${coordinadores}">
+                        <td><span class="badge"><i class="fas fa-fingerprint"></i><span th:text="${c.id}"></span></span></td>
+                        <td><strong th:text="${c.usuario}"></strong></td>
+                        <td th:text="${c.nombre}"></td>
+                        <td th:text="${c.apellido}"></td>
+                        <td th:text="${c.correo}"></td>
+                        <td th:text="${c.telefono}"></td>
+						
+						<td>
+						                <a th:href="@{'/admin/editarCoordinador/' + ${c.id}}" class="btn btn-warning btn-sm">
+						                    ✏ Editar
+						                </a>
+
+						                <a th:href="@{'/admin/eliminarCoordinador/' + ${c.id}}" 
+						                   class="btn btn-danger btn-sm"
+						                   onclick="return confirm('¿Seguro que deseas eliminarlo?')">
+						                    🗑 Eliminar
+						                </a>
+						            </td>
+                    </tr>
+                    
+                    <!-- Estado vacío -->
+                    <tr th:if="${#lists.isEmpty(coordinadores)}">
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <i class="fas fa-inbox"></i>
+                                <p>No hay coordinadores registrados</p>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

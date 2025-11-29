@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Administrador</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ====== TUS ESTILOS TAL CUAL LOS TENÍAS ====== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container { max-width: 1200px; margin: 0 auto; }
+        
+        .header {
+            background: white;
+            padding: 30px 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        h1 { 
+            color: #333;
+            font-size: 2.2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        h1 i { color: #667eea; font-size: 2.5rem; }
+        
+        .logout-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            background: #b71c1c;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(183, 28, 28, 0.3);
+        }
+        
+        .logout-btn:hover {
+            background: #8b0000;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(183, 28, 28, 0.4);
+        }
+        
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: white;
+            padding: 35px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+        
+        .card h2 {
+            color: #333;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+        }
+        
+        .card h2 i {
+            width: 45px;
+            height: 45px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 10px;
+            font-size: 1.3rem;
+            color: white;
+        }
+
+        .card:nth-child(1) h2 i { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .card:nth-child(2) h2 i { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .card:nth-child(3) h2 i { background: linear-gradient(135deg, #11998e, #38ef7d); }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        a.button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+        
+        a.button:hover {
+            transform: translateX(5px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        a.button i { font-size: 1.1rem; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <h1><i class="fas fa-user-shield"></i> Panel del Administrador</h1>
+        <a class="logout-btn" th:href="@{/}"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
+    </div>
+
+    <div class="cards-grid">
+
+        <!-- CARD 1: COORDINADORES -->
+        <div class="card">
+            <h2><i class="fas fa-user-tie"></i> Gestión de Coordinadores</h2>
+            <div class="button-group">
+                <a class="button" th:href="@{/admin/formCoordinador}">
+                    <i class="fas fa-plus-circle"></i> Crear Coordinador
+                </a>
+                <a class="button" th:href="@{/admin/listarCoordinadores}">
+                    <i class="fas fa-list-ul"></i> Ver Coordinadores
+                </a>
+            </div>
+        </div>
+
+        <!-- CARD 2: ESTUDIANTES -->
+        <div class="card">
+            <h2><i class="fas fa-user-graduate"></i> Gestión de Estudiantes</h2>
+            <div class="button-group">
+                <a class="button" th:href="@{/admin/crearEstudiante}">
+                    <i class="fas fa-plus-circle"></i> Crear Estudiante
+                </a>
+                <a class="button" th:href="@{/admin/listarEstudiantes}">
+                    <i class="fas fa-list-ul"></i> Ver Estudiantes
+                </a>
+            </div>
+        </div>
+
+        <!-- CARD 3: EVALUACIONES -->
+        <div class="card">
+            <h2><i class="fas fa-chart-bar"></i> Resultados Saber PRO</h2>
+            <div class="button-group">
+                <a class="button" th:href="@{/admin/informeAlumnos}">
+                    <i class="fas fa-clipboard-list"></i> Ver Evaluaciones
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

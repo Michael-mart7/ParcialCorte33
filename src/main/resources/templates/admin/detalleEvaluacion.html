@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Evaluación SABER PRO</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Header Card */
+        .header-card {
+            background: white;
+            border-radius: 20px;
+            padding: 35px 40px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            text-align: center;
+            animation: slideDown 0.6s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .header-icon i {
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        h2 {
+            color: #333;
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .header-subtitle {
+            color: #666;
+            font-size: 1rem;
+            margin-top: 8px;
+        }
+
+        /* Main Card */
+        .detail-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+            animation: slideUp 0.6s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Section Headers */
+        .section-title {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 18px 25px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 5px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .section-title i {
+            font-size: 1.3rem;
+        }
+
+        /* Alternative section colors */
+        .section-general { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .section-comunicacion { background: linear-gradient(135deg, #11998e, #38ef7d); }
+        .section-razonamiento { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .section-lectura { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+        .section-ciudadanas { background: linear-gradient(135deg, #fa709a, #fee140); }
+        .section-ingles { background: linear-gradient(135deg, #30cfd0, #330867); }
+        .section-proyectos { background: linear-gradient(135deg, #a8edea, #fed6e3); border-color: #4facfe; color: #333; }
+        .section-cientifico { background: linear-gradient(135deg, #ff9a9e, #fecfef); border-color: #fa709a; color: #333; }
+        .section-software { background: linear-gradient(135deg, #ffecd2, #fcb69f); border-color: #f093fb; color: #333; }
+
+        /* Table Styles */
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0;
+        }
+
+        .info-table tr {
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.3s ease;
+        }
+
+        .info-table tr:hover:not(:has(.section-title)) {
+            background: #f8f9fa;
+        }
+
+        .info-table th {
+            width: 40%;
+            padding: 18px 25px;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            font-weight: 600;
+            color: #2c3e50;
+            text-align: left;
+            font-size: 0.95rem;
+            border-right: 3px solid white;
+        }
+
+        .info-table td {
+            padding: 18px 25px;
+            color: #495057;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .info-table td:not(.section-title) {
+            background: white;
+        }
+
+        /* Value Badges */
+        .badge-value {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .badge-high {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+        }
+
+        .badge-medium {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .badge-low {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+        }
+
+        .badge-nivel {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .nivel-4 { background: linear-gradient(135deg, #11998e, #38ef7d); color: white; }
+        .nivel-3 { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+        .nivel-2 { background: linear-gradient(135deg, #f093fb, #f5576c); color: white; }
+        .nivel-1 { background: linear-gradient(135deg, #ffa726, #fb8c00); color: white; }
+
+        /* Status Badge */
+        .badge-status {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-aprobado {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+        }
+
+        .status-anulado {
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        /* Action Bar */
+        .action-bar {
+            padding: 25px;
+            text-align: center;
+            background: #f8f9fa;
+        }
+
+        .btn-volver {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            font-size: 1rem;
+        }
+
+        .btn-volver:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+
+        /* Summary Stats */
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 25px;
+            background: #f8f9fa;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            color: #333;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            .header-card {
+                padding: 25px 20px;
+            }
+
+            h2 {
+                font-size: 1.6rem;
+            }
+
+            .info-table th,
+            .info-table td {
+                padding: 12px 15px;
+                font-size: 0.85rem;
+            }
+
+            .info-table th {
+                width: 35%;
+            }
+
+            .section-title {
+                padding: 15px 15px;
+                font-size: 1rem;
+            }
+
+            .summary-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .action-bar,
+            .btn-volver {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <!-- Header -->
+    <div class="header-card">
+        <div class="header-icon">
+            <i class="fas fa-file-alt"></i>
+        </div>
+        <h2>Detalle de Evaluación SABER PRO</h2>
+        <p class="header-subtitle">Resultados completos por competencias</p>
+    </div>
+
+    <!-- Main Card -->
+    <div class="detail-card">
+        <!-- Summary Stats -->
+        <div class="summary-stats">
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <i class="fas fa-hashtag"></i>
+                </div>
+                <div class="stat-label">Registro</div>
+                <div class="stat-value" style="font-size: 1.2rem;" th:text="${evaluacion.numeroRegistro}">EK2018...</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="stat-label">Puntaje Total</div>
+                <div class="stat-value" th:text="${evaluacion.puntaje_total}">200</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                <div class="stat-label">Nivel Global</div>
+                <div class="stat-value" style="font-size: 1.3rem;" th:text="${evaluacion.saber_pro_nivel}">Nivel 4</div>
+            </div>
+        </div>
+
+        <!-- Detailed Table -->
+        <table class="info-table">
+            <!-- INFORMACIÓN GENERAL -->
+            <tr><td colspan="2" class="section-title section-general">
+                <i class="fas fa-info-circle"></i>
+                Información General
+            </td></tr>
+            <tr>
+                <th><i class="fas fa-hashtag"></i> Número de Registro</th>
+                <td><strong th:text="${evaluacion.numeroRegistro}"></strong></td>
+            </tr>
+            <tr>
+                <th><i class="fas fa-star"></i> Puntaje Total</th>
+                <td><span class="badge-value badge-high" th:text="${evaluacion.puntaje_total}"></span></td>
+            </tr>
+            <tr>
+                <th><i class="fas fa-layer-group"></i> Nivel Global</th>
+                <td><span class="badge-nivel nivel-4" th:text="${evaluacion.saber_pro_nivel}"></span></td>
+            </tr>
+            <tr>
+                <th><i class="fas fa-check-circle"></i> Estado</th>
+                <td><span class="badge-status status-aprobado" th:text="${evaluacion.estado}"><i class="fas fa-check"></i></span></td>
+            </tr>
+            <tr>
+                <th><i class="fas fa-calendar"></i> Fecha Registro</th>
+                <td th:text="${evaluacion.fecha_registro}"></td>
+            </tr>
+
+            <!-- COMUNICACIÓN ESCRITA -->
+            <tr><td colspan="2" class="section-title section-comunicacion">
+                <i class="fas fa-pen-fancy"></i>
+                Comunicación Escrita
+            </td></tr>
+            <tr>
+                <th>Puntaje</th>
+                <td><span class="badge-value badge-medium" th:text="${evaluacion.comunicacion_escrita}"></span></td>
+            </tr>
+            <tr>
+                <th>Nivel</th>
+                <td><span class="badge-nivel nivel-3" th:text="${evaluacion.comunicacion_escrita_nivel}"></span></td>
+            </tr>
+
+            <!-- RAZONAMIENTO CUANTITATIVO -->
+            <tr><td colspan="2" class="section-title section-razonamiento">
+                <i class="fas fa-calculator"></i>
+                Razonamiento Cuantitativo
+            </td></tr>
+            <tr>
+                <th>Puntaje</th>
+                <td><span class="badge-value badge-low" th:text="${evaluacion.razonamiento_cuantitativo}"></span></td>
+            </tr>
+            <tr>
+                <th>Nivel</th>
+                <td><span class="badge-nivel nivel-2" th:text="${evaluacion.razonamiento_cuantitativo_nivel}"></span></td>
+            </tr>
+
+            <!-- LECTURA CRÍTICA -->
+            <tr><td colspan="2" class="section-title section-lectura">
+                <i class="fas fa-book-open"></i>
+                Lectura Crítica
+            </td></tr>
+            <tr>
+                <th>Puntaje</th>
+                <td><span class="badge-value badge-high" th:text="${evaluacion.lectura_critica}"></span></td>
+            </tr>
+            <tr>
+                <th>Nivel</th>
+                <td><span class="badge-nivel nivel-4" th:text="${evaluacion.lectura_critica_nivel}"></span></td>
+            </tr>
+
+            <!-- COMPETENCIAS CIUDADANAS -->
+            <tr><td colspan="2" class="section-title section-ciudadanas">
+                <i class="fas fa-users"></i>
+                Competencias Ciudadanas
+            </td></tr>
+            <tr>
+                <th>Puntaje</th>
+                <td><span class="badge-value badge-medium" th:text="${evaluacion.competencias_ciudadanas}"></span></td>
+            </tr>
+            <tr>
+                <th>Nivel</th>
+                <td><span class="badge-nivel nivel-3" th:text="${evaluacion.competencias_ciudadanas_nivel}"></span></td>
+            </tr>
+
+            <!-- INGLÉS -->
+            <tr><td colspan="2" class="section-title section-ingles">
+                <i class="fas fa-language"></i>
+                Inglés
+            </td></tr>
+            <tr>
+                <th>Puntaje</th>
+                <td><span class="badge-value badge-high" th:text="${evaluacion.ingles}"></span></td>
+            </tr>
+            <tr>
+                <th>Nivel</th>
+                <td><span class="badge-nivel nivel-4" th:text="${evaluacion.ingles_nivel}"></span></td>
+            </tr>
+            <tr>
+                <th>Nivel Europeo</th>
+                <td><span class="badge-nivel nivel-3" th:text="${evaluacion.nivel_ingles_europeo}">B1</span></td>
+            </tr>
+
+            <!-- FORMULACIÓN DE PROYECTOS -->
+            <tr><td colspan="2" class="section-title section-proyectos">
+                <i class="fas fa-project-diagram"></i>
+                Formulación de Proyectos de Ingeniería
+            </td></tr>
+            <tr>
+                <th>Puntaje</th>
+                <td><span class="badge-value badge-medium" th:text="${evaluacion.formulacion_proyectos_ingenieria}"></span></td>
+            </tr>
+            <tr>
+                <th>Nivel</th>
+                <td><span class="badge-nivel nivel-3" th:text="${evaluacion.formulacion_proyectos_ingenieria_nivel}"></span></td>
+            </tr>
+
+            <!-- PENSAMIENTO CIENTÍFICO -->
+            <tr><td colspan="2" class="section-title section-cientifico">
+                <i class="fas fa-flask"></i>
+                Pensamiento Científico Matemáticas
+            </td></tr>
+            <tr>
+                <th>Puntaje</th>
+                <td><span class="badge-value badge-low" th:text="${evaluacion.pensamiento_cientifico_matematicas}"></span></td>
+            </tr>
+            <tr>
+                <th>Nivel</th>
+                <td><span class="badge-nivel nivel-2" th:text="${evaluacion.pensamiento_cientifico_matematicas_nivel}"></span></td>
+            </tr>
+
+            <!-- DISEÑO DE SOFTWARE -->
+            <tr><td colspan="2" class="section-title section-software">
+                <i class="fas fa-code"></i>
+                Diseño de Software
+            </td></tr>
+            <tr>
+                <th>Puntaje</th>
+                <td><span class="badge-value badge-high" th:text="${evaluacion.diseno_software}"></span></td>
+            </tr>
+            <tr>
+                <th>Nivel</th>
+                <td><span class="badge-nivel nivel-4" th:text="${evaluacion.diseno_software_nivel}"></span></td>
+            </tr>
+        </table>
+
+        <!-- Action Bar -->
+        <div class="action-bar">
+            <a href="/admin/informeAlumnos" class="btn-volver">
+                <i class="fas fa-arrow-left"></i>
+                Volver al Informe
+            </a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
