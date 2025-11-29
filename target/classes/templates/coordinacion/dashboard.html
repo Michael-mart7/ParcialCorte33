@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Coordinación</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 35px 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            margin-bottom: 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            animation: slideDown 0.6s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .header-icon i {
+            font-size: 2rem;
+            color: white;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .header-subtitle {
+            color: #666;
+            font-size: 0.95rem;
+            margin-top: 5px;
+        }
+
+        .logout-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            background: #e74c3c;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+
+        .stats-banner {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            text-align: center;
+            margin-bottom: 35px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .stats-banner p {
+            color: #666;
+            font-size: 1.05rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .stats-banner i {
+            color: #667eea;
+            font-size: 1.3rem;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 35px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.6s ease backwards;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            transition: height 0.3s ease;
+        }
+
+        .card.students::before {
+            background: linear-gradient(90deg, #11998e, #38ef7d);
+        }
+
+        .card.results::before {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .card.benefits::before {
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .card:hover::before {
+            height: 100%;
+            opacity: 0.05;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .card.students .card-icon {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+        }
+
+        .card.results .card-icon {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .card.benefits .card-icon {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+        }
+
+        h2 {
+            color: #333;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        a.button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 20px;
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        a.button:hover {
+            transform: translateX(5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .card.students a.button {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+        }
+
+        .card.results a.button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .card.benefits a.button {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+        }
+
+        a.button i {
+            font-size: 1.1rem;
+        }
+
+        /* Quick stats section */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+
+        .stat-box {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            animation: fadeIn 1s ease backwards;
+        }
+
+        .stat-box:nth-child(1) { animation-delay: 0.4s; }
+        .stat-box:nth-child(2) { animation-delay: 0.5s; }
+        .stat-box:nth-child(3) { animation-delay: 0.6s; }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 1.5rem;
+        }
+
+        .stat-box:nth-child(1) .stat-icon {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            color: #1976d2;
+        }
+
+        .stat-box:nth-child(2) .stat-icon {
+            background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+            color: #7b1fa2;
+        }
+
+        .stat-box:nth-child(3) .stat-icon {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            color: #388e3c;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            .header {
+                padding: 25px;
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header-left {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <div class="header-icon">
+                <i class="fas fa-user-tie"></i>
+            </div>
+            <div>
+                <h1>Panel de Coordinación</h1>
+                <p class="header-subtitle">Sistema de Gestión Académica</p>
+            </div>
+        </div>
+        <a class="logout-btn" th:href="@{/logout}">
+            <i class="fas fa-sign-out-alt"></i>
+            Cerrar sesión
+        </a>
+    </div>
+
+    <!-- Quick Stats -->
+	<div class="quick-stats">
+	    <div class="stat-box">
+	        <div class="stat-icon"><i class="fas fa-users"></i></div>
+	        <div class="stat-number" th:text="${totalEstudiantes}">0</div>
+	        <div class="stat-label">Total Estudiantes</div>
+	    </div>
+
+	    <div class="stat-box">
+	        <div class="stat-icon"><i class="fas fa-chart-bar"></i></div>
+	        <div class="stat-number" th:text="${totalEvaluaciones}">0</div>
+	        <div class="stat-label">Evaluaciones</div>
+	    </div>
+
+	    <div class="stat-box">
+	        <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+	        <div class="stat-number" th:text="${conBeneficios}">0</div>
+	        <div class="stat-label">Beneficios</div>
+	    </div>
+	</div>
+
+
+    <!-- Main Cards -->
+    <div class="cards-grid">
+        <!-- Card Estudiantes -->
+        <div class="card students">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+                <h2>Estudiantes</h2>
+            </div>
+            <div class="button-group">
+                <a class="button" th:href="@{/coordinacion/crearEstudiante}">
+                    <i class="fas fa-plus-circle"></i>
+                    Crear Estudiante
+                </a>
+                <a class="button" th:href="@{/coordinacion/listarEstudiantes}">
+                    <i class="fas fa-list-ul"></i>
+                    Ver Estudiantes
+                </a>
+            </div>
+        </div>
+
+        <!-- Card Resultados -->
+        <div class="card results">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h2>Resultados Saber PRO</h2>
+            </div>
+            <div class="button-group">
+                <a class="button" th:href="@{/coordinacion/informeAlumnos}">
+                    <i class="fas fa-clipboard-list"></i>
+                    Ver Evaluaciones
+                </a>
+            </div>
+        </div>
+
+        <!-- Card Beneficios -->
+        <div class="card benefits">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-award"></i>
+                </div>
+                <h2>Beneficios por Puntaje</h2>
+            </div>
+            <div class="button-group">
+                <a class="button" th:href="@{/coordinacion/beneficios}">
+                    <i class="fas fa-medal"></i>
+                    Ver Beneficios
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

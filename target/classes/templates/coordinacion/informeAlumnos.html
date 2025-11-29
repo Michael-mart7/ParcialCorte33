@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informe de Alumnos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header Card */
+        .header-card {
+            background: white;
+            border-radius: 20px;
+            padding: 35px 40px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            animation: slideDown 0.6s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .header-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .header-icon i {
+            font-size: 2rem;
+            color: white;
+        }
+
+        h2 {
+            color: #333;
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        /* Action Bar */
+        .action-bar {
+            background: white;
+            border-radius: 15px;
+            padding: 20px 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+
+        /* Filter Card */
+        .filter-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            margin-bottom: 25px;
+            animation: slideUp 0.6s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .filter-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .filter-header i {
+            color: #667eea;
+            font-size: 1.3rem;
+        }
+
+        .filter-header label {
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+
+        .form-select {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Table Card */
+        .table-card {
+            background: white;
+            border-radius: 20px;
+            padding: 0;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+            animation: slideUp 0.8s ease;
+        }
+
+        .table-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 25px 30px;
+            color: white;
+        }
+
+        .table-header h3 {
+            margin: 0;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            padding: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+        }
+
+        th {
+            padding: 18px 15px;
+            text-align: center;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 3px solid #667eea;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 18px 15px;
+            border-bottom: 1px solid #e9ecef;
+            color: #495057;
+            font-size: 0.95rem;
+        }
+
+        tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        tbody tr:hover {
+            background: #f8f9fa;
+            transform: scale(1.01);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Badges */
+        .badge-nivel {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-nivel-3 {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+        }
+
+        .badge-nivel-2 {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .badge-nivel-1 {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+        }
+
+        .badge-sin {
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        .badge-puntaje {
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .puntaje-alto {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+        }
+
+        .puntaje-medio {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .puntaje-bajo {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+        }
+
+        .puntaje-na {
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        /* Buttons */
+        .btn-ver {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+        }
+
+        .btn-ver:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+
+        /* Chart Section */
+        .chart-section {
+            padding: 30px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .chart-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .chart-header i {
+            color: #667eea;
+            font-size: 1.8rem;
+        }
+
+        .chart-header h3 {
+            color: #333;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        canvas {
+            max-height: 400px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #dee2e6;
+            margin-bottom: 20px;
+        }
+
+        .empty-state p {
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            .header-card {
+                padding: 25px 20px;
+            }
+
+            h2 {
+                font-size: 1.6rem;
+                text-align: center;
+            }
+
+            .action-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .table-wrapper {
+                padding: 15px;
+            }
+
+            th, td {
+                padding: 12px 10px;
+                font-size: 0.85rem;
+            }
+
+            .chart-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <!-- Header -->
+    <div class="header-card">
+        <div class="header-content">
+            <div class="header-icon">
+                <i class="fas fa-chart-bar"></i>
+            </div>
+            <h2><i class="fas fa-clipboard-list"></i> Informe General de Estudiantes</h2>
+        </div>
+    </div>
+
+    <!-- Action Bar -->
+    <div class="action-bar">
+        <a class="btn-back" th:href="@{/coordinacion/dashboard}">
+            <i class="fas fa-arrow-left"></i>
+            Volver al Panel
+        </a>
+    </div>
+
+    <!-- Filter -->
+    <div class="filter-card">
+        <form method="get">
+            <div class="row g-3">
+                <div class="col-md-6 col-lg-4">
+                    <div class="filter-header">
+                        <i class="fas fa-filter"></i>
+                        <label class="form-label">Filtrar por programa:</label>
+                    </div>
+                    <select name="programa" class="form-select" onchange="this.form.submit()">
+                        <option value="todos"
+                                th:selected="${programaSeleccionado == null or programaSeleccionado == 'todos'}">
+                            📚 Todos los programas
+                        </option>
+                        <option th:each="p : ${programas}"
+                                th:value="${p}"
+                                th:text="${p}"
+                                th:selected="${p == programaSeleccionado}">
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Table -->
+    <div class="table-card">
+        <div class="table-header">
+            <h3>
+                <i class="fas fa-table"></i>
+                Listado de Estudiantes y Evaluaciones
+            </h3>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-user"></i> Nombre</th>
+                        <th><i class="fas fa-id-badge"></i> Código</th>
+                        <th><i class="fas fa-hashtag"></i> Registro</th>
+                        <th><i class="fas fa-star"></i> Puntaje</th>
+                        <th><i class="fas fa-layer-group"></i> Nivel</th>
+                        <th><i class="fas fa-gift"></i> Beneficio</th>
+                        <th><i class="fas fa-eye"></i> Acción</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr th:each="e : ${estudiantes}">
+                        <td><strong th:text="${e.nombre + ' ' + e.apellido}"></strong></td>
+                        <td th:text="${e.codigo}"></td>
+                        <td th:text="${e.numeroRegistro}"></td>
+
+                        <!-- Puntaje con badge -->
+                        <td class="text-center">
+                            <span th:if="${evaluaciones[e.id] != null}"
+                                  th:classappend="${evaluaciones[e.id].puntaje_total >= 241 ? 'badge-puntaje puntaje-alto' : 
+                                                  (evaluaciones[e.id].puntaje_total >= 180 ? 'badge-puntaje puntaje-medio' : 
+                                                  (evaluaciones[e.id].puntaje_total >= 80 ? 'badge-puntaje puntaje-bajo' : 
+                                                  'badge-puntaje puntaje-na'))}"
+                                  th:text="${evaluaciones[e.id].puntaje_total}">
+                            </span>
+                            <span th:if="${evaluaciones[e.id] == null}" class="badge-puntaje puntaje-na">N/A</span>
+                        </td>
+
+                        <!-- Nivel -->
+                        <td class="text-center" th:text="${evaluaciones[e.id]?.saber_pro_nivel ?: 'N/A'}"></td>
+
+                        <!-- Beneficio con badge -->
+                        <td>
+                            <span th:if="${evaluaciones[e.id] != null}"
+                                  th:classappend="${evaluaciones[e.id].puntaje_total >= 241 ? 'badge-nivel badge-nivel-3' : 
+                                                  (evaluaciones[e.id].puntaje_total >= 211 ? 'badge-nivel badge-nivel-2' : 
+                                                  (evaluaciones[e.id].puntaje_total >= 180 ? 'badge-nivel badge-nivel-1' : 
+                                                  'badge-nivel badge-sin'))}"
+                                  th:text="${evaluaciones[e.id].puntaje_total >= 241 ? '🏆 Nivel 3 (Exon. + 100%)' :
+                                           (evaluaciones[e.id].puntaje_total >= 211 ? '🥈 Nivel 2 (Exon. + 50%)' :
+                                           (evaluaciones[e.id].puntaje_total >= 180 ? '🥉 Nivel 1 (Exoneración)' :
+                                           'Sin incentivos'))}">
+                            </span>
+                            <span th:if="${evaluaciones[e.id] == null}" class="badge-nivel badge-sin">N/A</span>
+                        </td>
+
+                        <!-- Acción -->
+                        <td class="text-center">
+                            <a class="btn-ver"
+                               th:href="@{'/coordinacion/detalleEvaluacion/' + ${e.numeroRegistro}}">
+                                <i class="fas fa-eye"></i>
+                                Ver
+                            </a>
+                        </td>
+                    </tr>
+
+                    <!-- Empty State -->
+                    <tr th:if="${#lists.isEmpty(estudiantes)}">
+                        <td colspan="7">
+                            <div class="empty-state">
+                                <i class="fas fa-inbox"></i>
+                                <p>No hay estudiantes registrados</p>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="chart-section">
+            <div class="chart-header">
+                <i class="fas fa-chart-bar"></i>
+                <h3>Promedio de Puntaje por Programa</h3>
+            </div>
+            <canvas id="grafPromedio"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script th:inline="javascript">
+    const labels = /*[[${promedioPorPrograma.keySet()}]]*/ [];
+    const data = /*[[${promedioPorPrograma.values()}]]*/ [];
+
+    new Chart(document.getElementById('grafPromedio'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Puntaje Promedio',
+                data: data,
+                backgroundColor: [
+                    'rgba(102, 126, 234, 0.8)',
+                    'rgba(118, 75, 162, 0.8)',
+                    'rgba(17, 153, 142, 0.8)',
+                    'rgba(56, 239, 125, 0.8)',
+                    'rgba(240, 147, 251, 0.8)',
+                    'rgba(245, 87, 108, 0.8)'
+                ],
+                borderColor: [
+                    'rgb(102, 126, 234)',
+                    'rgb(118, 75, 162)',
+                    'rgb(17, 153, 142)',
+                    'rgb(56, 239, 125)',
+                    'rgb(240, 147, 251)',
+                    'rgb(245, 87, 108)'
+                ],
+                borderWidth: 2,
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        font: {
+                            size: 14,
+                            weight: 600
+                        },
+                        padding: 20
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    padding: 12,
+                    titleFont: {
+                        size: 14,
+                        weight: 'bold'
+                    },
+                    bodyFont: {
+                        size: 13
+                    },
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                    borderWidth: 1
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)'
+                    },
+                    ticks: {
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        font: {
+                            size: 12
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

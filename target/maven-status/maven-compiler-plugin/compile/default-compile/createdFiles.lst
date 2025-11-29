@@ -1,0 +1,15 @@
+com\parcial3\app\controladores\AdminControlador.class
+com\parcial3\app\entidades\EvaluacionSaberPro.class
+com\parcial3\app\repositorios\AdministradorRepositorio.class
+com\parcial3\app\repositorios\EstudianteRepositorio.class
+com\parcial3\app\entidades\Coordinador.class
+com\parcial3\app\controladores\CoordinadorControlador.class
+com\parcial3\app\repositorios\CoordinadorRepositorio.class
+com\parcial3\app\controladores\LandingControlador.class
+com\parcial3\app\entidades\Administrador.class
+com\parcial3\app\controladores\LogoutControlador.class
+com\parcial3\app\controladores\EstudianteControlador.class
+com\parcial3\app\entidades\Estudiante.class
+com\parcial3\app\repositorios\EvaluacionRepositorio.class
+com\parcial3\app\controladores\ResultadoControlador.class
+com\parcial3\app\Parcial3Application.class
